@@ -8,7 +8,7 @@ DEBUG = False
 
 patches = [
     {
-        'patch_name': 'ANR10 - Disable Module',
+        'patch_name': 'Advanced Noise Reduction Module (luma+chroma)',
         'module_name': 'anr10_ipe',  # module name
         'address_offset': 35,   # bytes from module name to data section address
         'data_offset': 0,  # bytes from beginning of module data section
@@ -32,7 +32,7 @@ patches = [
     #     'replace': '00',  # hex without '0x'
     # },
     {
-        'patch_name': 'HNR10',
+        'patch_name': 'Hybrid Noise Reduction',
         'module_name': 'hnr10_ipe',  # module name
         'address_offset': 35,   # bytes from module name to data section address
         'data_offset': 0,  # bytes from beginning of module data section
@@ -40,7 +40,7 @@ patches = [
         'replace': '00',  # hex without '0x'
     },
     {
-        'patch_name': 'LENR10',
+        'patch_name': 'Low Exposure? Noise Reduction',
         'module_name': 'lenr10_ipe',  # module name
         'address_offset': 34,   # bytes from module name to data section address
         'data_offset': 0,  # bytes from beginning of module data section
@@ -48,7 +48,7 @@ patches = [
         'replace': '00',  # hex without '0x'
     },
     {
-        'patch_name': 'ASF30 - Disable Module)',
+        'patch_name': 'Adaptive Spatial Filter Module (Sharpening)',
         'module_name': 'asf30_ipe',  # module name
         'address_offset': 35,   # bytes from module name to data section address
         'data_offset': 0,  # bytes from beginning of module data section
@@ -88,7 +88,7 @@ patches = [
     #     'replace': '00',  # hex without '0x'
     # },
     {
-        'patch_name': 'TMC 10',
+        'patch_name': 'Tone Mapping Control v10',
         'module_name': 'tmc10_sw',  # module name
         'address_offset': 36,  # bytes from module name to data section address
         'data_offset': 0,  # bytes from beginning of module data section
@@ -96,7 +96,7 @@ patches = [
         'replace': '00',  # hex without '0x'
     },
     {
-        'patch_name': 'TMC 11',
+        'patch_name': 'Tone Mapping Control v11',
         'module_name': 'tmc11_sw',  # module name
         'address_offset': 36,  # bytes from module name to data section address
         'data_offset': 0,  # bytes from beginning of module data section
@@ -104,7 +104,7 @@ patches = [
         'replace': '00',  # hex without '0x'
     },
     {
-        'patch_name': 'TMC 12',
+        'patch_name': 'Tone Mapping Control v12',
         'module_name': 'tmc12_sw',  # module name
         'address_offset': 36,  # bytes from module name to data section address
         'data_offset': 0,  # bytes from beginning of module data section
@@ -112,7 +112,7 @@ patches = [
         'replace': '00',  # hex without '0x'
     },
     {
-        'patch_name': 'TMC 13',
+        'patch_name': 'Tone Mapping Control v13',
         'module_name': 'tmc13_sw',  # module name
         'address_offset': 36,  # bytes from module name to data section address
         'data_offset': 0,  # bytes from beginning of module data section
@@ -120,7 +120,7 @@ patches = [
         'replace': '00',  # hex without '0x'
     },
     {
-        'patch_name': 'GTM 10',
+        'patch_name': 'Global Tone Mapping (RAW)',
         'module_name': 'gtm10_ife',  # module name
         'address_offset': 35,  # bytes from module name to data section address
         'data_offset': 0,  # bytes from beginning of module data section
@@ -128,7 +128,7 @@ patches = [
         'replace': '00',  # hex without '0x'
     },
     {
-        'patch_name': 'GTM 13',
+        'patch_name': 'Global Tone Mapping (YUV 4:2:0)',
         'module_name': 'gtm13_ipe',  # module name
         'address_offset': 35,  # bytes from module name to data section address
         'data_offset': 0,  # bytes from beginning of module data section
@@ -136,7 +136,7 @@ patches = [
         'replace': '00',  # hex without '0x'
     },
     {
-        'patch_name': 'LTM 13',
+        'patch_name': 'Local Tone Mapping v13',
         'module_name': 'ltm13_ipe',  # module name
         'address_offset': 35,  # bytes from module name to data section address
         'data_offset': 0,  # bytes from beginning of module data section
@@ -144,7 +144,7 @@ patches = [
         'replace': '00',  # hex without '0x'
     },
     {
-        'patch_name': 'LTM 14',
+        'patch_name': 'Local Tone Mapping v14',
         'module_name': 'ltm14_ipe',  # module name
         'address_offset': 35,  # bytes from module name to data section address
         'data_offset': 0,  # bytes from beginning of module data section
@@ -152,7 +152,7 @@ patches = [
         'replace': '00',  # hex without '0x'
     },
     {
-        'patch_name': 'LTM 15',
+        'patch_name': 'Local Tone Mapping v15',
         'module_name': 'ltm15_ipe',  # module name
         'address_offset': 35,  # bytes from module name to data section address
         'data_offset': 0,  # bytes from beginning of module data section
@@ -160,7 +160,7 @@ patches = [
         'replace': '00',  # hex without '0x' replace
     },
     {
-        'patch_name': 'LTM 16',
+        'patch_name': 'Local Tone Mapping v16',
         'module_name': 'ltm16_ipe',  # module name
         'address_offset': 35,  # bytes from module name to data section address
         'data_offset': 0,  # bytes from beginning of module data section

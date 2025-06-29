@@ -208,7 +208,15 @@ patches = [
         'replace': '00',  # hex without '0x'
     },
     {
-        'patch_name': 'Temporal Filter (aka MFNR - Multi Frame Noise Reduction) - causes ghosting. !!! you must disable ANR entirely when using this !!!',
+        'patch_name': 'Temporal Filter v10 (aka MFNR - Multi Frame Noise Reduction) - causes ghosting. !!! you must disable ANR entirely when using this !!!',
+        'module_name': 'tf10_ipe',  # module name
+        'address_offset': 36,   # bytes from module name to data section address
+        'data_offset': 0,  # bytes from beginning of module data section
+        'search': '01',  # hex without '0x'
+        'replace': '00',  # hex without '0x'
+    },
+    {
+        'patch_name': 'Temporal Filter v20 (aka MFNR - Multi Frame Noise Reduction) - causes ghosting. !!! you must disable ANR entirely when using this !!!',
         'module_name': 'tf20_ipe',  # module name
         'address_offset': 36,   # bytes from module name to data section address
         'data_offset': 0,  # bytes from beginning of module data section

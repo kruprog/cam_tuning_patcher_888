@@ -168,7 +168,7 @@ patches = [
         'replace': '00',  # hex without '0x'
     },
     {
-        'patch_name': 'RAW Gamma curve (65 dots) (Global)',
+        'patch_name': 'RAW Gamma curve (65 dots) (Video signal, JPG Preview)',
         'module_name': 'gamma16_ife',  # module name
         'address_offset': 33,  # bytes from module name to data section address
         'data_offset': 0,  # bytes from beginning of module data section
@@ -176,7 +176,7 @@ patches = [
         'replace': '00',  # hex without '0x'
     },
     {
-        'patch_name': 'YUV 4:2:0 - Gamma curve (257 dots) (Video Signal, JPG Preview)',
+        'patch_name': 'YUV 4:2:0 - Gamma curve (257 dots) (Video Signal, JPG Signal)',
         'module_name': 'gamma16_ipe',  # module name
         'address_offset': 33,  # bytes from module name to data section address
         'data_offset': 0,  # bytes from beginning of module data section

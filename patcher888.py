@@ -340,7 +340,7 @@ def patch_process(outputFile, n):
                         #checks if original byte == patch['search'] byte
                         data_value = f.read(len(patch['search']) // 2).hex()
 
-                        print(f'"{data_value}" == "{patch['search']}"') if DEBUG else None
+                        print(f'>{data_value}< == >{patch["search"]}<') if DEBUG else None
 
                         if data_value == patch['search']:
                             print(f'\t#{i:>3}. changing: {data_value}', end='')

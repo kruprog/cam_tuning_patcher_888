@@ -3,34 +3,34 @@
 import os
 import shutil
 
-DATA_SECTION_START_ADDRESS = 0xB8
+DATA_SECTION_START_ADDRESS = 184
 DEBUG = False
 
 patches = [
     {
-        'patch_name': 'Advanced Noise Reduction Module (luma+chroma)',
+        'patch_name': 'Advanced Noise Reduction ALL (luma+chroma)',
         'module_name': 'anr10_ipe',  # module name
         'address_offset': 35,   # bytes from module name to data section address
         'data_offset': 0,  # bytes from beginning of module data section
         'search': '01',  # hex without '0x'
         'replace': '00',  # hex without '0x'
     },
-    # {
-    #     'patch_name': 'ANR10 - Disable Chroma Noise Reduction',
-    #     'module_name': 'anr10_ipe',  # module name
-    #     'address_offset': 35,   # bytes from module name to data section address
-    #     'data_offset': ,  # bytes from beginning of module data section
-    #     'search': '01',  # hex without '0x'
-    #     'replace': '00',  # hex without '0x'
-    # },
-    # {
-    #     'patch_name': 'ANR10 - Disable Luma Noise Reduction',
-    #     'module_name': 'anr10_ipe',  # module name
-    #     'address_offset': 35,   # bytes from module name to data section address
-    #     'data_offset': 152,  # bytes from beginning of module data section
-    #     'search': '01',  # hex without '0x'
-    #     'replace': '00',  # hex without '0x'
-    # },
+    {
+        'patch_name': 'ANR10 - ONLY Luma Noise Reduction - TEST IT',
+        'module_name': 'anr10_ipe',  # module name
+        'address_offset': 35,   # bytes from module name to data section address
+        'data_offset': 76,  # bytes from beginning of module data section
+        'search': '01',  # hex without '0x'
+        'replace': '00',  # hex without '0x'
+    },
+    {
+        'patch_name': 'ANR10 - ONLY Chroma Noise Reduction - TEST IT',
+        'module_name': 'anr10_ipe',  # module name
+        'address_offset': 35,   # bytes from module name to data section address
+        'data_offset': 80,  # bytes from beginning of module data section
+        'search': '01',  # hex without '0x'
+        'replace': '00',  # hex without '0x'
+    },
     {
         'patch_name': 'Hybrid Noise Reduction',
         'module_name': 'hnr10_ipe',  # module name
@@ -48,45 +48,45 @@ patches = [
         'replace': '00',  # hex without '0x'
     },
     {
-        'patch_name': 'Adaptive Spatial Filter Module (Sharpening)',
+        'patch_name': 'Adaptive Spatial Filter ALL (Sharpening)',
         'module_name': 'asf30_ipe',  # module name
         'address_offset': 35,   # bytes from module name to data section address
         'data_offset': 0,  # bytes from beginning of module data section
         'search': '01',  # hex without '0x'
         'replace': '00',  # hex without '0x'
     },
-    # {
-    #     'patch_name': 'ASF30 - Disable Edge Detection (layer 1)',
-    #     'module_name': 'asf30_ipe',  # module name
-    #     'address_offset': 35,  # bytes from module name to data section address
-    #     'data_offset': 200,  bytes from beginning of module data section
-    #     'search': '01',  # hex without '0x'
-    #     'replace': '00',  # hex without '0x'
-    # },
-    # {
-    #     'patch_name': 'ASF30 - Disable Edge Detection (layer 2)',
-    #     'module_name': 'asf30_ipe',  # module name
-    #     'address_offset': 35,  # bytes from module name to data section address
-    #     'data_offset': 208,  bytes from beginning of module data section
-    #     'search': '01',  # hex without '0x'
-    #     'replace': '00',  # hex without '0x'
-    # },
-    # {
-    #     'patch_name': 'ASF30 - Disable Edge Detection (radial)',
-    #     'module_name': 'asf30_ipe',  # module name
-    #     'address_offset': 35,  # bytes from module name to data section address
-    #     'data_offset': 216,  bytes from beginning of module data section
-    #     'search': '01',  # hex without '0x'
-    #     'replace': '00',  # hex without '0x'
-    # },
-    # {
-    #     'patch_name': 'ASF30 - Disable Edge Detection (contrast)',
-    #     'module_name': 'asf30_ipe',  # module name
-    #     'address_offset': 35,  # bytes from module name to data section address
-    #     'data_offset': 224,  bytes from beginning of module data section
-    #     'search': '01',  # hex without '0x'
-    #     'replace': '00',  # hex without '0x'
-    # },
+    {
+        'patch_name': 'Adaptive Spatial Filter - ONLY Edge Detection (layer 1) - TEST IT',
+        'module_name': 'asf30_ipe',  # module name
+        'address_offset': 35,  # bytes from module name to data section address
+        'data_offset': 108,  # bytes from beginning of module data section
+        'search': '01',  # hex without '0x'
+        'replace': '00',  # hex without '0x'
+    },
+    {
+        'patch_name': 'Adaptive Spatial Filter - ONLY Edge Detection (layer 2) - TEST IT',
+        'module_name': 'asf30_ipe',  # module name
+        'address_offset': 35,  # bytes from module name to data section address
+        'data_offset': 112,  # bytes from beginning of module data section
+        'search': '01',  # hex without '0x'
+        'replace': '00',  # hex without '0x'
+    },
+    {
+        'patch_name': 'Adaptive Spatial Filter - ONLY Edge Detection (radial) - TEST IT',
+        'module_name': 'asf30_ipe',  # module name
+        'address_offset': 35,  # bytes from module name to data section address
+        'data_offset': 116,  # bytes from beginning of module data section
+        'search': '01',  # hex without '0x'
+        'replace': '00',  # hex without '0x'
+    },
+    {
+        'patch_name': 'Adaptive Spatial Filter - ONLY Edge Detection (contrast) - TEST IT',
+        'module_name': 'asf30_ipe',  # module name
+        'address_offset': 35,  # bytes from module name to data section address
+        'data_offset': 120,  # bytes from beginning of module data section
+        'search': '01',  # hex without '0x'
+        'replace': '00',  # hex without '0x'
+    },
     {
         'patch_name': 'Tone Mapping Control v10',
         'module_name': 'tmc10_sw',  # module name
@@ -168,7 +168,7 @@ patches = [
         'replace': '00',  # hex without '0x'
     },
     {
-        'patch_name': 'RAW Gamma curve (65 dots) (Video signal, JPG Preview)',
+        'patch_name': 'RAW Gamma curve (65 dots) (Video signal, JPG Preview) (!!!for testing only!!!)',
         'module_name': 'gamma16_ife',  # module name
         'address_offset': 33,  # bytes from module name to data section address
         'data_offset': 0,  # bytes from beginning of module data section
@@ -176,7 +176,7 @@ patches = [
         'replace': '00',  # hex without '0x'
     },
     {
-        'patch_name': 'YUV 4:2:0 - Gamma curve (257 dots) (Video Signal, JPG Signal)',
+        'patch_name': 'YUV 4:2:0 - Gamma curve (257 dots) (Video Signal, JPG Signal) (!!!for testing only!!!)',
         'module_name': 'gamma16_ipe',  # module name
         'address_offset': 33,  # bytes from module name to data section address
         'data_offset': 0,  # bytes from beginning of module data section
@@ -184,7 +184,7 @@ patches = [
         'replace': '00',  # hex without '0x'
     },
     {
-        'patch_name': 'RAW Gamma curve (65 dots) (JPG Signal)',
+        'patch_name': 'RAW Gamma curve (65 dots) (JPG Signal) (!!!for testing only!!!)',
         'module_name': 'gamma16_bps',  # module name
         'address_offset': 33,  # bytes from module name to data section address
         'data_offset': 0,  # bytes from beginning of module data section

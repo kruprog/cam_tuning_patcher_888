@@ -1,10 +1,15 @@
-#/usr/bin/env python3
+#!/usr/bin/env python3
 
 import os
 import shutil
+import glob  # в начале файла, если ещё не подключён
 
 DATA_SECTION_START_ADDRESS = 184
 DEBUG = False
+
+# ваш список patches остаётся без изменений
+#from patches import patches  # предполагается, что список вынесен в отдельный файл (см. ниже), иначе вставьте весь код сюда
+
 
 patches = [
     {
@@ -224,153 +229,115 @@ patches = [
         'replace': '00',  # hex without '0x'
     },
 
-]
+] 
 
 
-def patch_start(patches=None):
-    filename = input(
-        '\nEnter the full file name of your tuning .bin\nExample: com.qti.tuned.umi_semco_s5khmx.bin\n------\n: ')
-
-    inputFile = 'input/' + filename
-    outputFile = 'output/' + filename
-
-    patchNum = 0
-
-    if not os.path.exists(inputFile):
-        print("Selected file doesn't exist. Aborting..")
-        return
-
-    #create output file
-    if os.path.exists(outputFile):
-        os.remove(outputFile)
-    shutil.copyfile(inputFile, outputFile)
-
-    #list all patches
-    print('\nFollowing patches are available:\n')
-    for patch in patches:
-        print(f"{str(patchNum):>2}. {patch['module_name']:<12} [{patch['patch_name']}]")
-        patchNum = patchNum + 1
-
-    #patch selection input
-    str_arr = input('\nEnter your desired patch(es). Separated by comma [,] (example: 0,1,5,7) or to apply every patch type [all] (example: all) : ')
-
-    #convert string input to integer list
-    if str_arr != 'all':
-        str_arr = str_arr.split(',')
-        patch_arr = list(map(int, str_arr))
-    else:
-        i = 0
-        patch_arr = []
-        for patch in patches:
-            patch_arr.append(i)
-            i = i + 1
-
-    #execute patching process for each selected patch
-    for n in patch_arr:
-        patch_process(outputFile, n)
-
-    #avoid exit without user input
-    print("\nAll patches have been applied!\n\nPress Enter to exit ...")
-    #input()
-
-
-#convert hex x86 to arm. or other way around idk
-def hex_to_big_little_int(hex):
-    little_hex = bytearray.fromhex(hex)
+def hex_to_big_little_int(hex_str):
+    little_hex = bytearray.fromhex(hex_str)
     little_hex.reverse()
-    str_little = ''.join(format(x, '02x') for x in little_hex)
-    int_little = int(str_little, base=16)
-    return int_little
+    return int(little_hex.hex(), 16)
 
 
-def patch_process(outputFile, n):
-    with open(outputFile, 'r+b') as f:
-        for index, patch in enumerate(patches):
-            #checks if current list index is selected to be patched by user
-            if index == n:
-                f.seek(0)
-                data = f.read()
-                #counts all string search hits
-                num_hit = data.count(str.encode(patch['module_name']))
-                print('\n' + '[' + patch['module_name'] + ']' + ' has been found ' + str(num_hit) + ' times: ')
-                count = 0
-                matches = 0
-                # goes to offset which contains data section address
-                f.seek(DATA_SECTION_START_ADDRESS)
+def patch_process(filepath, patch_indices):
+    with open(filepath, 'rb') as f:
+        data = bytearray(f.read())
 
-                # read the data section offset
-                datasectionoffset = hex_to_big_little_int(f.read(4).hex())
+    datasectionoffset = hex_to_big_little_int(data[DATA_SECTION_START_ADDRESS:DATA_SECTION_START_ADDRESS + 4].hex())
+    if DEBUG:
+        print(f"data section offset int32: {datasectionoffset}\n")
+
+    for n in patch_indices:
+        patch = patches[n]
+        module_bytes = patch['module_name'].encode('utf-8')
+        search_bytes = bytes.fromhex(patch['search'])
+        replace_bytes = bytes.fromhex(patch['replace'])
+
+        start = 0
+        found_count = 0
+        matches = 0
+
+        print(f"\n[{patch['module_name']}] searching...")
+
+        while True:
+            idx = data.find(module_bytes, start)
+            if idx == -1:
+                break
+
+            found_count += 1
+            address_ptr = idx + len(module_bytes) + patch['address_offset']
+            if address_ptr + 4 > len(data):
+                break
+
+            offset_bytes = data[address_ptr:address_ptr + 4]
+            offset = hex_to_big_little_int(offset_bytes.hex())
+            patch_location = datasectionoffset + offset + patch['data_offset']
+
+            if patch_location + len(search_bytes) > len(data):
+                break
+
+            current_value = data[patch_location:patch_location + len(search_bytes)]
+
+            if current_value == search_bytes:
+                print(f"\t#{found_count:>3}. patching {current_value.hex()} -> {patch['replace']}")
+                data[patch_location:patch_location + len(replace_bytes)] = replace_bytes
+                matches += 1
+            else:
+                print(f"\t#{found_count:>3}. already {current_value.hex()}")
+
+            start = idx + 1
+
+        print(f"Patched {matches} of {found_count} occurrences.")
+
+    with open(filepath, 'wb') as f:
+        f.write(data)
 
 
 
-                print('data section offset int32: ' + str(datasectionoffset) + '\n') if DEBUG else None
 
-                #goes back to file beginning
-                f.seek(0)
+def patch_start():
+    filename = input(
+        '\nEnter the full file name of your tuning .bin\nLeave empty to patch all .bin files in /input\n------\n: ').strip()
 
-                i = 1
+    if filename == "":
+        file_list = sorted(glob.glob('input/*.bin'))
+        if not file_list:
+            print("No .bin files found in /input. Aborting.")
+            return
+        print(f"\n{len(file_list)} file(s) found:")
+        for name in file_list:
+            print(" -", os.path.basename(name))
+    else:
+        input_path = os.path.join('input', filename)
+        if not os.path.exists(input_path):
+            print("Selected file doesn't exist. Aborting..")
+            return
+        file_list = [input_path]
 
-                #repeats until break
-                while True:
-                    #save current location for later use
-                    location = f.tell()
-                    string = patch['module_name'].encode('utf-8')
-                    #checks for current patching hit. avoids infinite while True: loop from never stopping
-                    if f.read(len(string)).hex() == string.hex() and count < num_hit:
-                        print('found data for ' + patch['module_name']) if DEBUG else None
-                        #save current location for later use
-                        location = f.tell()
-                        #go from patch['module_name'] to offset that stores the data block offset
-                        f.seek(location + patch['address_offset'])
-                        #read the module_name data block offset
-                        offset = f.read(4).hex()
-                        #convert offset hex to int
-                        offset_little_int = hex_to_big_little_int(offset)
-                        print('offset hex: ' + offset) if DEBUG else None
-                        print('offset int32: ' + str(offset_little_int)) if DEBUG else None
-                        #go to module_name data block and go to offset that has to be patched
-                        f.seek(offset_little_int + datasectionoffset)
-                        print(patch['module_name'] + ' block offset int32: ' + str(f.tell())) if DEBUG else None
-                        f.read(patch['data_offset'])
-                        #save offset for later use
-                        new_offset = f.tell()
-                        print('value offset from file beginning int32: ' + str(new_offset)) if DEBUG else None
-                        #go back to previous location
-                        f.seek(new_offset)
-                        #checks if original byte == patch['search'] byte
-                        data_value = f.read(len(patch['search']) // 2).hex()
+    print('\nFollowing patches are available:\n')
+    for i, patch in enumerate(patches):
+        print(f"{i:>2}. {patch['module_name']:<12} [{patch['patch_name']}]")
 
-                        print(f'>{data_value}< == >{patch["search"]}<') if DEBUG else None
+    str_arr = input('\nEnter your desired patch(es) separated by comma (e.g., 0,1,5,7), or [all]: ').strip()
+    if str_arr.lower() == 'all':
+        patch_arr = list(range(len(patches)))
+    else:
+        patch_arr = list(map(int, str_arr.split(',')))
 
-                        if data_value == patch['search']:
-                            print(f'\t#{i:>3}. changing: {data_value}', end='')
-                            #go back to previous location
-                            f.seek(new_offset)
-                            #patch byte(s)
-                            f.write(bytes.fromhex(patch['replace']))
-                            #go back to previous location
-                            f.seek(new_offset)
-                            print(' --> ' + str(f.read(len(patch['replace']) // 2).hex()))
-                            matches += 1
-                        else:
-                            print(f'\t#{i:>3}.  already: {data_value}')
+    for inputFile in file_list:
+        outputFile = os.path.join('output', os.path.basename(inputFile))
+        if os.path.exists(outputFile):
+            os.remove(outputFile)
+        shutil.copyfile(inputFile, outputFile)
 
-                        i += 1
-                        #goes back to origin location
-                        f.seek(location)
-                        count += 1
-                    elif count < num_hit:
-                        #goes one byte or whatever further than the last hit, to prevent patching the same hit infinite times
-                        f.seek(location + 1)
-                    #checks if all hits have been patched
-                    elif count >= num_hit:
-                        #close the patched file
-                        f.close()
-                        break
+        print(f"\nProcessing: {os.path.basename(inputFile)}")
+        patch_process(outputFile, patch_arr)
+
+    print("\nAll patches have been applied!\n\nPress Enter to exit ...")
+    input()
 
 
 def main():
-    patch_start(patches=patches)
+    patch_start()
 
 
 if __name__ == '__main__':

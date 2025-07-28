@@ -15,7 +15,7 @@ Effects:
 26 - MFNR disabled. No ghosting anymore.  
 17 - local tone mapping disabled. No flickering in video with manual exposure settings. Affects contrast, lower contrast in shadow regions.  
 22 - affects contrast. Makes image darker and more contrast.  
-15, 19 - doesn't recommended to use. Crashes HDR video mode in stock camera.  
+15, 19 - not recommended to use. Crashes HDR video mode in stock camera.  
 5,6,7,8,9 - disables sharpening.  
 10,11,18  - not used in libraries mi 11 ultra. No effect.  
 12,13,14,16,20,23,24,25 - effect unknown. No visible effect in my tests.  
